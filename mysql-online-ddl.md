@@ -315,3 +315,26 @@ pt-online-schema-change \
 ---
 
 📝 **一句话总结：** INSTANT 改字典，INPLACE 原地重建，COPY 全表复制。能用 INSTANT 绝不用 INPLACE，能用 INPLACE 绝不用 COPY。
+
+---
+
+Add by chatGPT:
+MySQL 在 InnoDB 在线建索引时，通过“全量构建 + 增量日志”的方式保证一致性：
+
+1. 先扫描聚簇索引，对已有数据进行排序并批量构建新索引（bulk load）
+2. 在构建过程中，所有 DML 操作不会直接更新新索引，而是记录到 row log（online DDL log）
+3. 全量构建完成后，再将 row log 中的增量操作应用到新索引
+4. 最后通过短暂锁切换索引，保证一致性
+
+这种方式避免了随机写带来的性能问题，同时保证了在线 DDL 期间的数据一致性
+
+
+👉 面试官会问：
+如果在构建过程中，row log 非常大，会发生什么？
+
+你要答：
+👉
+MySQL 会限制 row log 大小
+超过阈值后，会退化为 COPY 算法（锁表重建）
+避免内存或临时空间爆炸
+
