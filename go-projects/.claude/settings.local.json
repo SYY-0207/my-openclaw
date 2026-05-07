@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sed -i '178s/.*/\\\\t\\\\t\\\\t\\\\tclose\\(doneCh\\) \\\\/\\\\/ close broadcasts to all goroutines reading it/' concurrency/04_patterns.go)",
+      "Bash(sed -i '179a\\\\\\\\t\\\\t\\\\t\\\\tfmt.Println\\(\"    Consumer: sent shutdown signal\"\\)\\\\n\\\\t\\\\t\\\\t\\\\tbreak \\\\/\\\\/ Prevent double-close: the loop may receive one more value' concurrency/04_patterns.go)"
+    ]
+  }
+}
